@@ -70,5 +70,5 @@ npm start
 
 \## Author
 
-Kiran Raj
+@Krcwaves
 

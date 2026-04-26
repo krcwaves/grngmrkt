@@ -1,0 +1,58 @@
+{
+  "program": {
+    "candyMachine": "W4y2aMk8eJUQBohUwBKdqmci2bw5oCmZqAoPNDp9C9r",
+    "candyGuard": "",
+    "candyMachineCreator": "2XCsezSv7Um7chfP6riC2f8HXN8s5tUoSXSHinmwkqxU",
+    "collectionMint": "VcN8rkE32kw3B9LaM2qMsAcMJU8RV637Zrqv5YbS9wU"
+  },
+  "items": {
+    "-1": {
+      "name": "KRCWAVES Norse Gods",
+      "image_hash": "7a8b9d5eabac19d4d624ee228c4d3abb7f63844a51f1acebe14ca212093a035a",
+      "image_link": "https://gateway.irys.xyz/G3i2saVUa8fT5xzoxtAd6oqCkSo3yVci42mEzW3hsVdb?ext=png",
+      "metadata_hash": "0d64626f5dc7ab519b9897022c00f026c287f4fce8b6be6f3ce87eb532b4c699",
+      "metadata_link": "https://gateway.irys.xyz/4C52NUqPLWAgYC6sogQ13PsioJTdkphjGnYSqz5BD5Bn",
+      "onChain": true
+    },
+    "0": {
+      "name": "NJORD #001 - Watcher of Shores",
+      "image_hash": "7a8b9d5eabac19d4d624ee228c4d3abb7f63844a51f1acebe14ca212093a035a",
+      "image_link": "https://gateway.irys.xyz/DYfpMWL8eqinHqPsRMKsiySuraDbbLjnkViLumT9hNk9?ext=png",
+      "metadata_hash": "12a00d1b0f3d092517a8e4f2b3ee48665301fc527b897ff63185863b60f0c5d8",
+      "metadata_link": "https://gateway.irys.xyz/9Ev7R5L5dcfi16HczCzw1EnhWb52XTdbmjkj5qYgfVbD",
+      "onChain": true
+    },
+    "1": {
+      "name": "ODIN #002 - The All-Father",
+      "image_hash": "cb0fe024acc76c702a26ac8417e14fc51875a42472d00c1d947c39ec5b9d2099",
+      "image_link": "https://gateway.irys.xyz/D3i9attxcyK2vrmBmMrRgf6U2i2U6SEnJ2Qfyy3NCC5P?ext=png",
+      "metadata_hash": "08a7468385160c7b9db049de2a1743275a455de8359a1ad6f8a0410861cb8bea",
+      "metadata_link": "https://gateway.irys.xyz/3jecx5CaqQHSCFx7xH9QTZBBvi3bd7GAKoPQ9EpCxFmP",
+      "onChain": true
+    },
+    "2": {
+      "name": "NJORD #003 - Storm of Asgard",
+      "image_hash": "504191e1e149ac83c9dd6ff79f7695d418848c84a6270e5561d1b16c428ecf6a",
+      "image_link": "https://gateway.irys.xyz/8u6iSDqGwPLs3TUFpWqPTW7KrwvYKPMf1yGwmJ2WqXbm?ext=png",
+      "metadata_hash": "84a1773db7a9c7aef994ac92ce17d5cd940e1fa42f4829b75e9c5a0c4737db88",
+      "metadata_link": "https://gateway.irys.xyz/HYjCpDf6QYXKTGqvX3gTBBVvpbXie8TaTNjE4BAF7BTe",
+      "onChain": true
+    },
+    "3": {
+      "name": "ODIN #004 - The Gaze",
+      "image_hash": "78c6bc9d8d0d38505952ca5bf6647bc2db2f7b07f147cc6380ca09149006bfef",
+      "image_link": "https://gateway.irys.xyz/4uhHvUGSL7j3LvxioBfk4bcaAGvJRJvFfBvCeN14KbYy?ext=png",
+      "metadata_hash": "0aa123116ce560fbb9e603c7a1a25bd6bd345f529e5dbde2f6cd64e5b00ad924",
+      "metadata_link": "https://gateway.irys.xyz/AwfFfPgCuPjiZisouW6wgY4CZERSjbBtASNaDcvyeZYW",
+      "onChain": true
+    },
+    "4": {
+      "name": "NJORD #005 - Dawn at the Edge",
+      "image_hash": "6455a15f165022b149b2e9b3ffe0ea466bc6f2d9bbfbb26bbaf1483385238e2c",
+      "image_link": "https://gateway.irys.xyz/DM1AFKsUCgfUzEiMwv9qpuWFTjTTLnNpRC85uCzEJwhF?ext=png",
+      "metadata_hash": "730370b46fd3e310edede25f3fe9cfd06e2958c7945bdf23fbc93d8246fb4336",
+      "metadata_link": "https://gateway.irys.xyz/A2XAPP1heScWRb5d1wNeyN6X5zCcfuSnpUwMENCwP7mH",
+      "onChain": true
+    }
+  }
+}

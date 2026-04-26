@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRNGMRKT — The Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --paper: #F0EAD6;
+    --black: #1A1A1A;
+    --crimson: #DC143C;
+    --gold: #C5A945;
+    --shadow: 8px 8px 0px #1A1A1A;
+    --shadow-sm: 4px 4px 0px #1A1A1A;
+    --shadow-white: 8px 8px 0px #F0EAD6;
+    --border: 4px solid #1A1A1A;
+    --border-2: 2px solid #1A1A1A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--black);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Global noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ========================
+     ANIMATIONS
+  ======================== */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes jitter {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-1px, 0) rotate(-0.5deg); }
+    50% { transform: translate(1px, -1px) rotate(0.3deg); }
+    75% { transform: translate(-0.5px, 1px) rotate(-0.2deg); }
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    33% { opacity: 0.98; }
+    66% { opacity: 0.99; }
+  }
+
+  @keyframes glitch-text {
+    0%, 100% { text-shadow: 2px 2px 0px var(--crimson), -1px -1px 0px var(--gold); }
+    25% { text-shadow: -2px 2px 0px var(--crimson), 1px -1px 0px var(--gold); }
+    50% { text-shadow: -1px -1px 0px var(--gold), 2px 2px 0px var(--crimson); }
+    75% { text-shadow: 3px -1px 0px var(--crimson), -2px 2px 0px var(--gold); }
+  }
+
+  /* ========================
+     TOP TICKER BAR
+  ======================== */
+  .ticker-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    background: var(--crimson);
+    border-bottom: 4px solid var(--black);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .ticker-inner {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+    gap: 0;
+  }
+
+  .ticker-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--paper);
+    letter-spacing: 0.1em;
+    padding-right: 60px;
+    text-transform: uppercase;
+  }
+
+  .ticker-sep {
+    color: var(--gold);
+    margin: 0 8px;
+  }
+
+  /* ========================
+     PRIMARY NAVIGATION
+  ======================== */
+  .nav {
+    position: fixed;
+    top: 36px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--paper);
+    border-bottom: var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    z-index: 999;
+  }
+
+  .nav-logo {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    color: var(--black);
+    border: var(--border);
+    padding: 4px 12px;
+    box-shadow: 4px 4px 0px var(--gold);
+    text-decoration: none;
+    flex-shrink: 0;
+    animation: flicker 3s step-end infinite;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    flex: 1;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--black);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-right: 2px solid var(--black);
+    transition: background 0.1s;
+  }
+
+  .nav-links li:first-child a { border-left: 2px solid var(--black); }
+
+  .nav-links a:hover { background: var(--black); color: var(--paper); }
+
+  .nav-search {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+  }
+
+  .nav-search input {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    background: var(--paper);
+    border: 4px solid var(--black);
+    border-right: none;
+    padding: 6px 12px;
+    outline: none;
+    color: var(--black);
+    width: 200px;
+  }
+
+  .nav-search input::placeholder { color: #888; text-transform: uppercase; }
+
+  .nav-search button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--black);
+    color: var(--paper);
+    border: 4px solid var(--black);
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .nav-search button:hover { background: var(--crimson); border-color: var(--crimson); }
+
+  /* ========================
+     MAIN LAYOUT
+  ======================== */
+  main { padding-top: 96px; }
+
+  /* ========================
+     HERO
+  ======================== */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 540px;
+    border-bottom: var(--border);
+    background: var(--paper);
+  }
+
+  .hero-left {
+    padding: 72px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--paper);
+    max-width: 900px;
+  }
+
+  .hero-headline {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(56px, 8vw, 96px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    color: var(--black);
+    animation: glitch-text 2s step-end infinite;
+    margin-bottom: 32px;
+  }
+
+  .hero-desc {
+    background: var(--black);
+    color: var(--paper);
+    padding: 20px 24px;
+    transform: rotate(1.5deg);
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 420px;
+    border: var(--border-2);
+  }
+
+  .hero-desc strong {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 32px;
+  }
+
+  /* Jitter CTA Button */
+  .btn-jitter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--crimson);
+    color: #fff;
+    border: 4px solid var(--black);
+    padding: 14px 28px;
+    box-shadow: 6px 6px 0px var(--black);
+    cursor: pointer;
+    animation: jitter 0.5s step-end infinite;
+    transition: box-shadow 0.05s, transform 0.05s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-jitter:hover {
+    box-shadow: none;
+    transform: translate(4px, 4px);
+    animation: none;
+  }
+
+  .btn-secondary {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: transparent;
+    color: var(--black);
+    border: 4px solid var(--black);
+    padding: 14px 24px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: box-shadow 0.05s, transform 0.05s;
+  }
+
+  .btn-secondary:hover {
+    box-shadow: none;
+    transform: translate(4px, 4px);
+    background: var(--black);
+    color: var(--paper);
+  }
+
+  /* Trust badge */
+  .trust-badge {
+    background: var(--gold);
+    border: 4px solid var(--black);
+    box-shadow: 6px 6px 0px var(--black);
+    padding: 12px 16px;
+    transform: rotate(-4deg);
+    display: inline-block;
+    margin-top: 24px;
+    align-self: flex-start;
+  }
+
+  .trust-badge .badge-num {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--black);
+    display: block;
+    line-height: 1;
+  }
+
+  .trust-badge .badge-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--black);
+  }
+
+  /* Hero right */
+  .hero-right {
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px;
+    background-image: radial-gradient(#1A1A1A 1px, transparent 1px), radial-gradient(#333 1px, transparent 1px);
+    background-size: 6px 6px, 6px 6px;
+    background-position: 0 0, 3px 3px;
+  }
+
+  .hero-right-img {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    clip-path: polygon(0% 1%, 5% 0%, 10% 1.5%, 15% 0.5%, 20% 1%, 25% 0%, 30% 1%, 35% 0.5%, 40% 1%, 45% 0%, 50% 1%, 55% 0.5%, 60% 1%, 65% 0%, 70% 1.5%, 75% 0.5%, 80% 1%, 85% 0%, 90% 1%, 95% 0.5%, 100% 1%, 100% 99%, 95% 100%, 90% 98.5%, 85% 100%, 80% 99%, 75% 100%, 70% 98.5%, 65% 100%, 60% 99%, 55% 100%, 50% 98.5%, 45% 100%, 40% 99%, 35% 100%, 30% 98.5%, 25% 100%, 20% 99%, 15% 100%, 10% 98.5%, 5% 100%, 0% 99%);
+    overflow: hidden;
+  }
+
+  .hero-img-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(80px, 12vw, 160px);
+    font-weight: 900;
+    color: #333;
+    letter-spacing: -0.05em;
+    user-select: none;
+  }
+
+  .hero-stats {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 24px;
+  }
+
+  .hero-stat {
+    border-top: 4px solid var(--crimson);
+    padding-top: 12px;
+  }
+
+  .hero-stat-num {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--paper);
+    display: block;
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  /* ========================
+     FILTER BAR
+  ======================== */
+  .filter-bar {
+    background: var(--black);
+    border-bottom: var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 96px;
+    z-index: 100;
+  }
+
+  .filter-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-right: 8px;
+  }
+
+  .filter-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: #fff;
+    color: var(--black);
+    border: 2px solid var(--black);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+
+  .filter-btn.active {
+    box-shadow: 3px 3px 0px var(--gold);
+    filter: brightness(0.9);
+  }
+
+  /* ========================
+     SECTION HEADERS
+  ======================== */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 40px 32px 24px;
+    border-bottom: var(--border-2);
+    margin-bottom: 0;
+  }
+
+  .section-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    color: var(--black);
+  }
+
+  .section-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--crimson);
+    text-transform: uppercase;
+  }
+
+  /* ========================
+     MARKETPLACE GRID
+  ======================== */
+  .marketplace {
+    padding: 0;
+  }
+
+  .grid-wrap {
+    padding: 32px;
+  }
+
+  .gig-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  /* NFT CARD */
+  .gig-card {
+    border: 2px solid var(--black);
+    box-shadow: var(--shadow);
+    background: var(--paper);
+    clip-path: none;
+    border-radius: 0;
+    transition: transform 0.1s, box-shadow 0.1s;
+    overflow: visible;
+    cursor: pointer;
+  }
+
+  .gig-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0px var(--black);
+  }
+
+  /* NFT image area */
+  .gig-img {
+    width: 100%;
+    height: 220px;
+    background: #2a2a2a;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: filter 0.3s;
+  }
+
+  .gig-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.3) contrast(1.1);
+    transition: filter 0.3s, transform 0.3s;
+  }
+
+  .gig-card:hover .gig-img img {
+    filter: grayscale(0) contrast(1.05);
+    transform: scale(1.04);
+  }
+
+  .gig-img-placeholder {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: #444;
+    letter-spacing: -0.05em;
+    user-select: none;
+  }
+
+  .gig-img-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(#1A1A1A 1px, transparent 1px);
+    background-size: 6px 6px;
+    opacity: 0.12;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
+  /* Edition badge overlaid on image */
+  .nft-edition-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--black);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border: 2px solid var(--gold);
+    z-index: 2;
+  }
+
+  /* Rarity bar overlaid bottom of image */
+  .nft-rarity-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(26,26,26,0.85);
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+  }
+
+  .nft-rarity-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+  }
+
+  .nft-rarity-pill {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    letter-spacing: 0.08em;
+  }
+
+  .rarity-legendary { background: var(--crimson); color: #fff; }
+  .rarity-rare      { background: var(--gold);    color: var(--black); }
+  .rarity-uncommon  { background: #444;            color: var(--paper); }
+  .rarity-common    { background: transparent;     color: #aaa; border: 1px solid #555; }
+
+  .gig-body {
+    padding: 14px 14px 0;
+  }
+
+  /* NFT collection line */
+  .nft-collection {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--crimson);
+    margin-bottom: 4px;
+  }
+
+  .gig-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .gig-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 2px solid var(--black);
+    padding: 2px 6px;
+    background: transparent;
+  }
+
+  .gig-tag.featured { background: var(--crimson); color: #fff; border-color: var(--crimson); }
+  .gig-tag.hot      { background: var(--gold);    color: var(--black); border-color: var(--gold); }
+
+  .gig-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  /* Traits row */
+  .nft-traits {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .nft-trait {
+    background: var(--black);
+    color: var(--paper);
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 7px;
+    border: 1px solid var(--black);
+  }
+
+  .nft-trait span {
+    color: var(--gold);
+  }
+
+  .gig-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .gig-stars {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .gig-reviews {
+    font-size: 10px;
+    color: #888;
+    margin-left: 4px;
+  }
+
+  .gig-footer {
+    border-top: 3px solid var(--black);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .gig-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .gig-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 0;
+    border: 2px solid var(--black);
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--paper);
+    font-family: 'Cabinet Grotesk', sans-serif;
+    flex-shrink: 0;
+  }
+
+  .gig-username {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--black);
+  }
+
+  /* Buy button inside card footer */
+  .nft-buy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--black);
+    color: var(--paper);
+    border: 2px solid var(--black);
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    white-space: nowrap;
+  }
+
+  .nft-buy-btn:hover { background: var(--crimson); border-color: var(--crimson); }
+
+  .gig-price {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--crimson);
+    line-height: 1;
+  }
+
+  .gig-price span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    color: #888;
+    display: block;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  /* Collection stats bar above grid */
+  .collection-stats {
+    background: var(--black);
+    border-bottom: var(--border-2);
+    padding: 12px 32px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .col-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .col-stat-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(240,234,214,0.45);
+  }
+
+  .col-stat-val {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--paper);
+    line-height: 1;
+  }
+
+  .col-stat-val.accent { color: var(--gold); }
+  .col-stat-val.red    { color: var(--crimson); }
+
+  /* ========================
+     PROCESS / MILESTONE
+  ======================== */
+  .process {
+    background: var(--black);
+    border-top: var(--border);
+    border-bottom: var(--border);
+    padding: 60px 32px;
+    background-image: radial-gradient(#222 1px, transparent 1px), radial-gradient(#222 1px, transparent 1px);
+    background-size: 6px 6px, 6px 6px;
+    background-position: 0 0, 3px 3px;
+  }
+
+  .process-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    color: var(--paper);
+    margin-bottom: 40px;
+  }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .process-card {
+    background: var(--paper);
+    border: 4px solid var(--paper);
+    padding: 24px 20px;
+    position: relative;
+  }
+
+  .process-card:nth-child(1) { transform: rotate(-1.5deg); box-shadow: 8px 8px 0px var(--crimson); border-color: var(--crimson); }
+  .process-card:nth-child(2) { transform: rotate(1deg); box-shadow: 8px 8px 0px var(--gold); border-color: var(--gold); }
+  .process-card:nth-child(3) { transform: rotate(-0.5deg); box-shadow: 8px 8px 0px var(--crimson); border-color: var(--crimson); }
+  .process-card:nth-child(4) { transform: rotate(2deg); box-shadow: 8px 8px 0px var(--gold); border-color: var(--gold); }
+
+  .process-num {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--black);
+    opacity: 0.08;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    line-height: 1;
+  }
+
+  .process-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .process-card-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+
+  .process-card-desc {
+    font-size: 11px;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  /* ========================
+     FEATURED BANNER
+  ======================== */
+  .featured-banner {
+    border-top: var(--border);
+    border-bottom: var(--border);
+    background: var(--crimson);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .featured-banner h2 {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    color: #fff;
+    animation: glitch-text 2s step-end infinite;
+  }
+
+  .featured-banner p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    max-width: 400px;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  .btn-white {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--paper);
+    color: var(--black);
+    border: 4px solid var(--black);
+    padding: 14px 28px;
+    box-shadow: 6px 6px 0px var(--black);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    flex-shrink: 0;
+    transition: box-shadow 0.05s, transform 0.05s;
+    white-space: nowrap;
+  }
+
+  .btn-white:hover {
+    box-shadow: none;
+    transform: translate(4px, 4px);
+  }
+
+  /* ========================
+     FOOTER
+  ======================== */
+  footer {
+    background: var(--black);
+    border-top: var(--border);
+    padding: 48px 40px 32px;
+    background-image: radial-gradient(#222 1px, transparent 1px), radial-gradient(#222 1px, transparent 1px);
+    background-size: 6px 6px, 6px 6px;
+    background-position: 0 0, 3px 3px;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 40px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    padding-bottom: 40px;
+  }
+
+  .footer-logo-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-logo {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    color: var(--paper);
+    border: 2px solid var(--paper);
+    padding: 6px 14px;
+    display: inline-block;
+    transform: rotate(-2deg);
+    width: fit-content;
+    animation: flicker 4s step-end infinite;
+  }
+
+  .footer-tagline {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+
+  .footer-col-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,234,214,0.6);
+    text-decoration: none;
+    transition: color 0.1s;
+  }
+
+  .footer-links a:hover { color: var(--paper); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-copy {
+    font-size: 10px;
+    color: rgba(240,234,214,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .system-log {
+    font-size: 8px;
+    color: rgba(240,234,214,0.2);
+    text-align: right;
+    line-height: 1.8;
+    max-width: 300px;
+  }
+
+  /* ========================
+     WALLET BAR (placeholder)
+  ======================== */
+  .wallet-bar {
+    background: var(--paper);
+    border-bottom: var(--border);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .wallet-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+  }
+
+  .wallet-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #888;
+    display: inline-block;
+    animation: flicker 1s step-end infinite;
+  }
+
+  .wallet-dot.connected { background: #2ecc71; }
+
+  .wallet-connect-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: transparent;
+    color: var(--black);
+    border: 3px solid var(--black);
+    padding: 4px 14px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px var(--black);
+    transition: box-shadow 0.05s, transform 0.05s;
+  }
+
+  .wallet-connect-btn:hover {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+    background: var(--black);
+    color: var(--paper);
+  }
+
+  .sol-price {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--black);
+  }
+
+  .sol-logo {
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, #9945FF, #14F195);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ========================
+     RESPONSIVE
+  ======================== */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .gig-grid { grid-template-columns: repeat(2, 1fr); }
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .gig-grid { grid-template-columns: 1fr; }
+    .process-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- TICKER BAR -->
+<div class="ticker-bar">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-text">
+      ★ SYSTEM ONLINE <span class="ticker-sep">//</span>
+      KRCWAVES — NORSE GODS COLLECTION <span class="ticker-sep">//</span>
+      ◆ SOLANA PAYMENTS ENABLED <span class="ticker-sep">//</span>
+      NJORD #001 — GENESIS 1 OF 1 <span class="ticker-sep">//</span>
+      FLOOR: 0.02 SOL <span class="ticker-sep">//</span>
+      ◉ MAINNET READY <span class="ticker-sep">//</span>
+      5 NFTS + 1 DIGITAL GOOD <span class="ticker-sep">//</span>
+      CREATOR: @KRCWAVES <span class="ticker-sep">//</span>
+    </span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">GRNG<span style="color:var(--crimson);">MRKT</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Browse</a></li>
+    <li><a href="#">Categories</a></li>
+    <li><a href="#">Sellers</a></li>
+    <li><a href="#">Drops</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div class="nav-search">
+    <input type="text" placeholder="SEARCH LISTINGS...">
+    <button>FIND</button>
+  </div>
+</nav>
+
+<!-- WALLET BAR -->
+<div style="margin-top:96px;">
+  <div class="wallet-bar">
+    <div class="wallet-status">
+      <span class="wallet-dot" id="wallet-dot"></span>
+      <span id="wallet-status-text">WALLET: NOT CONNECTED</span>
+    </div>
+    <div class="sol-price">
+      <div class="sol-logo"></div>
+      <span>SOL / USD: <span id="sol-usd">...</span></span>
+      <span id="sol-change" style="color:var(--gold);">LOADING</span>
+    </div>
+    <button class="wallet-connect-btn" id="wallet-btn" onclick="toggleWallet()">CONNECT WALLET</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" style="margin-top:0;">
+  <div class="hero-left">
+    <div>
+      <h1 class="hero-headline">BUY.<br>SELL.<br>BUILD.</h1>
+      <div class="hero-desc">
+        The <strong>underground NFT marketplace</strong> on Solana. Discover, collect, and trade rare digital art from the <strong>KRCWAVES</strong> collection. No middleman. No bullshit. Your keys, your NFTs.
+      </div>
+    </div>
+    <div>
+      <div class="hero-cta-row">
+        <a href="#marketplace" class="btn-jitter">BROWSE NFTS</a>
+        <a href="https://x.com/KRCwaves" target="_blank" rel="noopener" class="btn-secondary">SELL YOUR WORK</a>
+      </div>
+      <div style="display:flex; gap:16px; margin-top:24px;">
+        <div class="trust-badge">
+          <span class="badge-num">4.9★</span>
+          <span class="badge-label">VERIFIED PLATFORM</span>
+        </div>
+        <div class="trust-badge" style="background:var(--black); border-color:var(--crimson); box-shadow:6px 6px 0px var(--crimson);">
+          <span class="badge-num" style="color:var(--paper);">SOL</span>
+          <span class="badge-label" style="color:var(--gold);">CRYPTO NATIVE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="marketplace">
+  <span class="filter-label">// FILTER:</span>
+  <button class="filter-btn active" onclick="setFilter(this, 'all')">ALL</button>
+  <button class="filter-btn" onclick="setFilter(this, 'legendary')">LEGENDARY</button>
+  <button class="filter-btn" onclick="setFilter(this, 'rare')">RARE</button>
+  <button class="filter-btn" onclick="setFilter(this, 'uncommon')">UNCOMMON</button>
+  <button class="filter-btn" onclick="setFilter(this, 'common')">COMMON</button>
+  <button class="filter-btn" onclick="setFilter(this, 'digital')">DIGITAL GOODS</button>
+  <span style="margin-left:auto; font-size:10px; color:var(--gold); font-weight:700;">SORT: <span style="color:#fff; cursor:pointer;" id="sort-btn" onclick="toggleSort()">NEWEST ▼</span></span>
+</div>
+
+<!-- MARKETPLACE GRID -->
+<section class="marketplace">
+  <div class="section-header">
+    <span class="section-title">NFT DROPS</span>
+    <span class="section-count">// 5 NFTS + 1 DIGITAL GOOD — NORSE GODS COLLECTION</span>
+  </div>
+
+  <!-- Collection stats bar -->
+  <div class="collection-stats">
+    <div class="col-stat">
+      <span class="col-stat-label">COLLECTION</span>
+      <span class="col-stat-val">NORSE GODS</span>
+    </div>
+    <div class="col-stat">
+      <span class="col-stat-label">ITEMS</span>
+      <span class="col-stat-val">5 + 1</span>
+    </div>
+    <div class="col-stat">
+      <span class="col-stat-label">FLOOR PRICE</span>
+      <span class="col-stat-val accent" id="floor-price">— SOL</span>
+    </div>
+    <div class="col-stat">
+      <span class="col-stat-label">TOTAL VOLUME</span>
+      <span class="col-stat-val accent">— SOL</span>
+    </div>
+    <div class="col-stat">
+      <span class="col-stat-label">CHAIN</span>
+      <span class="col-stat-val">SOLANA</span>
+    </div>
+    <div class="col-stat">
+      <span class="col-stat-label">CREATOR</span>
+      <span class="col-stat-val red">@KRCWAVES</span>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="gig-grid">
+
+      <!-- NFT #001 -->
+      <div class="gig-card" data-category="legendary" data-sol="0.05">
+        <div class="gig-img">
+          <img src="nft1.png" alt="NJORD #001 — WATCHER OF SHORES">
+          <div class="gig-img-overlay"></div>
+          <div class="nft-edition-badge">1 / 1</div>
+          <div class="nft-rarity-bar">
+            <span class="nft-rarity-label">RARITY</span>
+            <span class="nft-rarity-pill rarity-legendary">LEGENDARY</span>
+          </div>
+        </div>
+        <div class="gig-body">
+          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="gig-tags">
+            <span class="gig-tag featured">GENESIS</span>
+            <span class="gig-tag">1-OF-1</span>
+          </div>
+          <p class="gig-title">NJORD #001 — WATCHER OF SHORES</p>
+          <div class="nft-traits">
+            <div class="nft-trait">GOD: <span>NJORD</span></div>
+            <div class="nft-trait">REALM: <span>NÓATÚN</span></div>
+            <div class="nft-trait">STYLE: <span>OIL PAINT</span></div>
+          </div>
+        </div>
+        <div class="gig-footer">
+          <div>
+            <div class="gig-price nft-card-price" data-sol="0.05">0.05 SOL<span class="nft-usd">≈ $—</span></div>
+          </div>
+          <button class="nft-buy-btn">BUY NOW</button>
+        </div>
+      </div>
+
+      <!-- NFT #002 -->
+      <div class="gig-card" data-category="legendary" data-sol="0.05">
+        <div class="gig-img">
+          <img src="nft2.png" alt="ODIN #002 — THE ALL-FATHER">
+          <div class="gig-img-overlay"></div>
+          <div class="nft-edition-badge">1 / 1</div>
+          <div class="nft-rarity-bar">
+            <span class="nft-rarity-label">RARITY</span>
+            <span class="nft-rarity-pill rarity-legendary">LEGENDARY</span>
+          </div>
+        </div>
+        <div class="gig-body">
+          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="gig-tags">
+            <span class="gig-tag featured">GENESIS</span>
+            <span class="gig-tag">1-OF-1</span>
+          </div>
+          <p class="gig-title">ODIN #002 — THE ALL-FATHER</p>
+          <div class="nft-traits">
+            <div class="nft-trait">GOD: <span>ODIN</span></div>
+            <div class="nft-trait">REALM: <span>ASGARD</span></div>
+            <div class="nft-trait">STYLE: <span>DARK MYTH</span></div>
+          </div>
+        </div>
+        <div class="gig-footer">
+          <div>
+            <div class="gig-price nft-card-price" data-sol="0.05">0.05 SOL<span class="nft-usd">≈ $—</span></div>
+          </div>
+          <button class="nft-buy-btn">BUY NOW</button>
+        </div>
+      </div>
+
+      <!-- NFT #003 -->
+      <div class="gig-card" data-category="rare" data-sol="0.03">
+        <div class="gig-img">
+          <img src="nft3.png" alt="NJORD #003 — STORM OF ASGARD">
+          <div class="gig-img-overlay"></div>
+          <div class="nft-edition-badge">1 / 5</div>
+          <div class="nft-rarity-bar">
+            <span class="nft-rarity-label">RARITY</span>
+            <span class="nft-rarity-pill rarity-rare">RARE</span>
+          </div>
+        </div>
+        <div class="gig-body">
+          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="gig-tags">
+            <span class="gig-tag hot">HOT</span>
+            <span class="gig-tag">SERIES A</span>
+          </div>
+          <p class="gig-title">NJORD #003 — STORM OF ASGARD</p>
+          <div class="nft-traits">
+            <div class="nft-trait">SCENE: <span>OPEN SEA</span></div>
+            <div class="nft-trait">WEATHER: <span>TEMPEST</span></div>
+            <div class="nft-trait">STYLE: <span>EPIC ART</span></div>
+          </div>
+        </div>
+        <div class="gig-footer">
+          <div>
+            <div class="gig-price nft-card-price" data-sol="0.03">0.03 SOL<span class="nft-usd">≈ $—</span></div>
+          </div>
+          <button class="nft-buy-btn">BUY NOW</button>
+        </div>
+      </div>
+
+      <!-- NFT #004 -->
+      <div class="gig-card" data-category="rare" data-sol="0.03">
+        <div class="gig-img">
+          <img src="nft4.png" alt="ODIN #004 — THE GAZE">
+          <div class="gig-img-overlay"></div>
+          <div class="nft-edition-badge">2 / 5</div>
+          <div class="nft-rarity-bar">
+            <span class="nft-rarity-label">RARITY</span>
+            <span class="nft-rarity-pill rarity-rare">RARE</span>
+          </div>
+        </div>
+        <div class="gig-body">
+          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="gig-tags">
+            <span class="gig-tag featured">FEATURED</span>
+            <span class="gig-tag">SERIES A</span>
+          </div>
+          <p class="gig-title">ODIN #004 — THE GAZE</p>
+          <div class="nft-traits">
+            <div class="nft-trait">GOD: <span>ODIN</span></div>
+            <div class="nft-trait">FOCUS: <span>EYES</span></div>
+            <div class="nft-trait">STYLE: <span>SKETCH</span></div>
+          </div>
+        </div>
+        <div class="gig-footer">
+          <div>
+            <div class="gig-price nft-card-price" data-sol="0.03">0.03 SOL<span class="nft-usd">≈ $—</span></div>
+          </div>
+          <button class="nft-buy-btn">BUY NOW</button>
+        </div>
+      </div>
+
+      <!-- NFT #005 -->
+      <div class="gig-card" data-category="uncommon" data-sol="0.02">
+        <div class="gig-img">
+          <img src="nft5.png" alt="NJORD #005 — DAWN AT THE EDGE">
+          <div class="gig-img-overlay"></div>
+          <div class="nft-edition-badge">3 / 10</div>
+          <div class="nft-rarity-bar">
+            <span class="nft-rarity-label">RARITY</span>
+            <span class="nft-rarity-pill rarity-uncommon">UNCOMMON</span>
+          </div>
+        </div>
+        <div class="gig-body">
+          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="gig-tags">
+            <span class="gig-tag">SERIES B</span>
+          </div>
+          <p class="gig-title">NJORD #005 — DAWN AT THE EDGE</p>
+          <div class="nft-traits">
+            <div class="nft-trait">SCENE: <span>COASTLINE</span></div>
+            <div class="nft-trait">SKY: <span>ROSE DAWN</span></div>
+            <div class="nft-trait">STYLE: <span>OIL PAINT</span></div>
+          </div>
+        </div>
+        <div class="gig-footer">
+          <div>
+            <div class="gig-price nft-card-price" data-sol="0.02">0.02 SOL<span class="nft-usd">≈ $—</span></div>
+          </div>
+          <button class="nft-buy-btn">BUY NOW</button>
+        </div>
+      </div>
+
+      <!-- DIGITAL GOODS — Excel PnL Tool -->
+      <div class="gig-card" data-category="digital" data-sol="0.01">
+        <div class="gig-img" style="background:#0d1f0d;">
+          <div style="text-align:center; padding:16px;">
+            <div style="font-family:'Cabinet Grotesk',sans-serif; font-size:40px; font-weight:900; color:#2ecc71; letter-spacing:-0.05em; line-height:1;">PNL<br>CALC</div>
+            <div style="font-size:9px; font-weight:700; color:#1a5c1a; text-transform:uppercase; letter-spacing:0.1em; margin-top:6px;">EXCEL TOOL</div>
+          </div>
+          <div class="gig-img-overlay"></div>
+          <div class="nft-edition-badge" style="border-color:#2ecc71; color:#2ecc71;">UNLIMITED</div>
+          <div class="nft-rarity-bar">
+            <span class="nft-rarity-label">TYPE</span>
+            <span class="nft-rarity-pill" style="background:#2ecc71; color:#000;">DIGITAL GOOD</span>
+          </div>
+        </div>
+        <div class="gig-body">
+          <div class="nft-collection" style="color:#2ecc71;">DIGITAL TOOLS</div>
+          <div class="gig-tags">
+            <span class="gig-tag hot">NEW</span>
+            <span class="gig-tag">EXCEL</span>
+            <span class="gig-tag">TRADING</span>
+          </div>
+          <p class="gig-title">PROP FIRM PNL CALCULATOR — EXCEL SHEET</p>
+          <div class="nft-traits">
+            <div class="nft-trait">TYPE: <span>XLSX</span></div>
+            <div class="nft-trait">USE: <span>PROP FIRMS</span></div>
+            <div class="nft-trait">DL: <span>INSTANT</span></div>
+          </div>
+        </div>
+        <div class="gig-footer">
+          <div>
+            <div class="gig-price nft-card-price" data-sol="0.01">0.01 SOL<span class="nft-usd">≈ $—</span></div>
+          </div>
+          <button class="nft-buy-btn" style="background:#2ecc71; border-color:#2ecc71; color:#000;">BUY NOW</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BANNER -->
+<div class="featured-banner">
+  <div>
+    <h2>OWN A PIECE.<br>ON-CHAIN FOREVER.</h2>
+    <p>Each KRCWAVES NFT is minted on Solana mainnet. Verified ownership. Instant transfer. Payments in SOL — settled on-chain with zero middlemen. DM to collaborate or list your own work.</p>
+  </div>
+  <a href="https://x.com/KRCwaves" target="_blank" rel="noopener" class="btn-white">START SELLING →</a>
+</div>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="process-title">// HOW IT WORKS</div>
+  <div class="process-grid">
+    <div class="process-card">
+      <span class="process-num">01</span>
+      <span class="process-icon">🔗</span>
+      <div class="process-card-title">CONNECT WALLET</div>
+      <p class="process-card-desc">Link your Solana wallet — Phantom, Backpack, or Solflare. No email, no signup, no bullshit. Your keys, your identity.</p>
+    </div>
+    <div class="process-card">
+      <span class="process-num">02</span>
+      <span class="process-icon">🔍</span>
+      <div class="process-card-title">BROWSE & BUY</div>
+      <p class="process-card-desc">Find tools, templates, assets, and services from verified sellers. Filter by category, price, or rating. One-click checkout.</p>
+    </div>
+    <div class="process-card">
+      <span class="process-num">03</span>
+      <span class="process-icon">⚡</span>
+      <div class="process-card-title">INSTANT TRANSFER</div>
+      <p class="process-card-desc">Payment goes on-chain the moment you confirm. Funds held in escrow until delivery is verified. ~0.001 SOL transaction fee.</p>
+    </div>
+    <div class="process-card">
+      <span class="process-num">04</span>
+      <span class="process-icon">📦</span>
+      <div class="process-card-title">GET YOUR GOODS</div>
+      <p class="process-card-desc">Downloads delivered automatically after on-chain confirmation. Service listings include seller contact and milestone tracking.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo-block">
+      <div class="footer-logo">GRNG<br>MRKT</div>
+      <span class="footer-tagline">// UNDERGROUND MARKETPLACE</span>
+      <div style="margin-top:12px; font-size:10px; color:rgba(240,234,214,0.4); line-height:1.8; text-transform:uppercase; letter-spacing:0.05em;">
+        Solana-native.<br>Crypto-first.<br>No KYC.
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col-title">MARKETPLACE</div>
+      <ul class="footer-links">
+        <li><a href="#">Browse All</a></li>
+        <li><a href="#">Featured Drops</a></li>
+        <li><a href="#">New Listings</a></li>
+        <li><a href="#">Top Sellers</a></li>
+        <li><a href="#">Categories</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">SELLERS</div>
+      <ul class="footer-links">
+        <li><a href="https://x.com/KRCwaves" target="_blank" rel="noopener">Start Selling</a></li>
+        <li><a href="#">Seller Docs</a></li>
+        <li><a href="#">Pricing & Fees</a></li>
+        <li><a href="#">Escrow Policy</a></li>
+        <li><a href="#">Verification</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">SYSTEM</div>
+      <ul class="footer-links">
+        <li><a href="#">Connect Wallet</a></li>
+        <li><a href="#">Transaction Log</a></li>
+        <li><a href="#">API Access</a></li>
+        <li><a href="#">Status Page</a></li>
+        <li><a href="https://x.com/KRCwaves" target="_blank" rel="noopener">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2024 GRNGMRKT — ALL RIGHTS RESERVED // BUILT ON SOLANA</span>
+    <div class="system-log">
+      SYS_LOG :: BUILD v2.4.1-rc3<br>
+      NODE: mainnet-beta.solana.com<br>
+      SLOT: 287,394,021<br>
+      STATUS: OPERATIONAL<br>
+      UPTIME: 99.97% // TPS: 3,847
+    </div>
+  </div>
+</footer>
+
+<!-- No web3.js needed — using pure fetch + Phantom native -->
+<script>
+  const RECIPIENT = 'FLMCAqRFSTyDmMRcxTcCS1eUTDvs3oqpGSbo2w3scE1x';
+  let connectedWallet = null;
+
+  // ==========================================
+  // TRACKING — sends data to Node.js backend
+  // ==========================================
+  const BACKEND = 'http://localhost:3001';
+
+  async function track(type, data) {
+    try {
+      await fetch(`${BACKEND}/api/track/${type}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, userAgent: navigator.userAgent })
+      });
+    } catch (e) { /* backend offline — silently fail */ }
+  }
+
+  // ==========================================
+  // BASE58 encoder (needed for Phantom)
+  // ==========================================
+  function b58encode(bytes) {
+    const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    let n = BigInt(0);
+    for (const b of bytes) n = (n << 8n) | BigInt(b);
+    let result = '';
+    while (n > 0n) {
+      const rem = Number(n % 58n);
+      n = n / 58n;
+      result = ALPHABET[rem] + result;
+    }
+    for (const b of bytes) {
+      if (b !== 0) break;
+      result = '1' + result;
+    }
+    return result;
+  }
+
+  // ==========================================
+  // MODAL
+  // ==========================================
+  function showModal(title, message, type = 'info') {
+    let modal = document.getElementById('tx-modal');
+    if (!modal) { modal = document.createElement('div'); modal.id = 'tx-modal'; document.body.appendChild(modal); }
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(26,26,26,0.92);display:flex;align-items:center;justify-content:center;z-index:99999;font-family:JetBrains Mono,monospace;';
+    const colors = { info:'var(--gold)', success:'#2ecc71', error:'var(--crimson)', loading:'var(--gold)' };
+    const icons  = { info:'◈', success:'✓', error:'✗', loading:'▪▪▪' };
+    modal.innerHTML = `<div style="background:var(--paper);border:4px solid var(--black);box-shadow:8px 8px 0px ${colors[type]};padding:32px 40px;max-width:480px;width:90%;">
+      <div style="font-family:'Cabinet Grotesk',sans-serif;font-size:32px;font-weight:900;color:${colors[type]};margin-bottom:8px;">${icons[type]}</div>
+      <div style="font-family:'Cabinet Grotesk',sans-serif;font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;color:var(--black);margin-bottom:12px;">${title}</div>
+      <div style="font-size:11px;line-height:1.8;color:#444;">${message}</div>
+      ${type !== 'loading' ? `<button onclick="document.getElementById('tx-modal').remove()" style="margin-top:20px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;background:var(--black);color:var(--paper);border:none;padding:10px 20px;cursor:pointer;letter-spacing:0.1em;">CLOSE ✗</button>` : ''}
+    </div>`;
+  }
+
+  // ==========================================
+  // WALLET
+  // ==========================================
+  async function toggleWallet() {
+    if (connectedWallet) { disconnectWallet(); return; }
+    await connectWallet();
+  }
+
+  async function connectWallet() {
+    const btn = document.getElementById('wallet-btn');
+
+    // Debug what's available
+    console.log('window.solana:', window.solana);
+    console.log('window.phantom:', window.phantom);
+
+    const provider = window.phantom?.solana || window.solana;
+
+    if (!provider || !provider.isPhantom) {
+      showModal('PHANTOM NOT FOUND',
+        'Phantom wallet was not detected.<br><br>' +
+        '1. Make sure Phantom extension is installed and enabled<br>' +
+        '2. If using Brave, click the lion shield icon and disable shields for this page<br>' +
+        '3. Try refreshing after enabling<br>' +
+        '4. Or open in Chrome instead<br><br>' +
+        'Install at: <a href="https://phantom.app" target="_blank" style="color:var(--crimson);">phantom.app</a>',
+        'error');
+      return;
+    }
+    try {
+      btn.textContent = 'CONNECTING...';
+      const resp = await provider.connect();
+      connectedWallet = resp.publicKey.toString();
+      document.getElementById('wallet-dot').classList.add('connected');
+      btn.textContent = 'DISCONNECT';
+      btn.style.cssText += 'color:var(--gold);border-color:var(--gold);';
+      const balance = await getBalance(connectedWallet);
+      document.getElementById('wallet-status-text').textContent = connectedWallet.slice(0,4) + '...' + connectedWallet.slice(-4) + ' · ' + balance + ' SOL';
+      showModal('WALLET CONNECTED', `Address: <strong>${connectedWallet.slice(0,8)}...${connectedWallet.slice(-8)}</strong><br>Balance: <strong>${balance} SOL</strong> (devnet)<br><br>You can now buy NFTs from the collection below.`, 'success');
+      window._solanaProvider = provider;
+      // Track wallet connect
+      track('click', { nftName: 'SITE', action: 'wallet_connect', wallet: connectedWallet });
+    } catch (err) {
+      btn.textContent = 'CONNECT WALLET';
+      showModal('CONNECTION FAILED', err.code === 4001 ? 'You rejected the connection in Phantom.' : (err.message || 'Unknown error.'), 'error');
+    }
+  }
+
+  function disconnectWallet() {
+    if (window.solana) window.solana.disconnect();
+    connectedWallet = null;
+    document.getElementById('wallet-dot').classList.remove('connected');
+    document.getElementById('wallet-status-text').textContent = 'WALLET: NOT CONNECTED';
+    const btn = document.getElementById('wallet-btn');
+    btn.textContent = 'CONNECT WALLET';
+    btn.style.color = ''; btn.style.borderColor = '';
+  }
+
+  async function getBalance(address) {
+    try {
+      const res = await fetch('https://api.devnet.solana.com', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ jsonrpc:'2.0', id:1, method:'getBalance', params:[address,{commitment:'confirmed'}] })
+      });
+      const data = await res.json();
+      return (data.result.value / 1e9).toFixed(4);
+    } catch { return '?'; }
+  }
+
+  // ==========================================
+  // BUY NFT — uses Phantom's native sendTransaction
+  // ==========================================
+  // ==========================================
+  // BASE58 decoder
+  // ==========================================
+  function b58decode(s) {
+    const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    let n = BigInt(0);
+    for (const c of s) {
+      const idx = ALPHABET.indexOf(c);
+      if (idx < 0) throw new Error('Non-base58 char: ' + c);
+      n = n * 58n + BigInt(idx);
+    }
+    const hex = n.toString(16).padStart(64, '0');
+    const arr = new Uint8Array(32);
+    for (let i = 0; i < 32; i++) arr[i] = parseInt(hex.slice(i*2, i*2+2), 16);
+    return arr;
+  }
+
+  // ==========================================
+  // BUY NFT — pure fetch, no web3.js
+  // ==========================================
+  async function buyNFT(cardIndex, solAmount, nftName) {
+    if (!connectedWallet) {
+      showModal('CONNECT WALLET FIRST', 'Click <strong>CONNECT WALLET</strong> at the top.', 'info');
+      return;
+    }
+    // Track buy click
+    track('click', { nftName, nftIndex: cardIndex, wallet: connectedWallet, action: 'buy_click' });
+    showModal('CONFIRM PURCHASE',
+      `Buying: <strong>${nftName}</strong><br>Price: <strong>${solAmount} SOL</strong><br>Network: <strong>Solana Devnet</strong><br><br>Approve in Phantom...`,
+      'loading');
+    try {
+      const provider = window._solanaProvider || window.phantom?.solana || window.solana;
+
+      // 1. Get blockhash
+      const bhRes = await fetch('https://api.devnet.solana.com', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getLatestBlockhash',params:[{commitment:'confirmed'}]})
+      });
+      const { blockhash, lastValidBlockHeight } = (await bhRes.json()).result.value;
+
+      // 2. Build transaction message bytes manually
+      const lamports = Math.round(solAmount * 1_000_000_000);
+      const from = b58decode(connectedWallet);
+      const to   = b58decode(RECIPIENT);
+      const bh   = b58decode(blockhash);
+      const sys  = b58decode('11111111111111111111111111111111');
+
+      // Transfer data: type=2 (u32 LE) + lamports (u64 LE)
+      const idata = new Uint8Array(12);
+      const dv = new DataView(idata.buffer);
+      dv.setUint32(0, 2, true);
+      dv.setUint32(4, lamports & 0xFFFFFFFF, true);
+      dv.setUint32(8, Math.floor(lamports / 0x100000000), true);
+
+      // Message: header(3) + accounts_len(1) + 3×32 accounts + blockhash(32) + ix_count(1) + ix
+      const msg = new Uint8Array([
+        1, 0, 1,           // header: 1 signer, 0 ro-signers, 1 ro-nonsigner
+        3,                 // 3 account keys
+        ...from, ...to, ...sys,
+        ...bh,             // recent blockhash
+        1,                 // 1 instruction
+        2,                 // program id index (sys = index 2)
+        2, 0, 1,           // 2 account indices: from(0), to(1)
+        12, ...idata       // data length + data
+      ]);
+
+      // 3. Full transaction = sig_count(1) + empty_sig(64) + message
+      const tx = new Uint8Array([1, ...new Uint8Array(64), ...msg]);
+
+      // 4. Send to Phantom as base58
+      const txB58 = b58encode(tx);
+      const { signature } = await provider.request({
+        method: 'signAndSendTransaction',
+        params: { message: txB58 }
+      });
+
+      // Track confirmed transaction
+      const solPrice = parseFloat(document.getElementById('sol-usd')?.textContent?.replace('$','')) || 0;
+      track('transaction', {
+        nftName, nftIndex: cardIndex, solAmount, usdAmount: solAmount * solPrice,
+        signature, wallet: connectedWallet, network: 'devnet', type: 'nft'
+      });
+
+      showModal('TRANSACTION CONFIRMED! 🎉',
+        `<strong>${nftName}</strong> is yours!<br><br>
+         Sig: <span style="font-size:9px;word-break:break-all;color:#444;">${signature}</span><br><br>
+         <a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:var(--crimson);font-weight:700;">VIEW ON SOLANA EXPLORER ↗</a>`,
+        'success');
+
+      const cards = document.querySelectorAll('.gig-card');
+      if (cards[cardIndex]) {
+        const btn = cards[cardIndex].querySelector('.nft-buy-btn');
+        if (btn) { btn.textContent = 'SOLD ✓'; btn.style.background='#2ecc71'; btn.style.borderColor='#2ecc71'; btn.style.color='#000'; btn.disabled=true; }
+      }
+    } catch (err) {
+      console.error('Buy error:', err);
+      const msg = err.message || JSON.stringify(err);
+      if (msg.includes('rejected') || err.code === 4001 || msg.includes('User rejected')) {
+        showModal('TRANSACTION REJECTED', 'You cancelled the transaction in Phantom.', 'error');
+      } else {
+        showModal('TRANSACTION FAILED', msg, 'error');
+      }
+    }
+  }
+
+  // ==========================================
+  // ATTACH BUY BUTTONS ON LOAD
+  // ==========================================
+  const nftNames = [
+    'NJORD #001 — Watcher of Shores',
+    'ODIN #002 — The All-Father',
+    'NJORD #003 — Storm of Asgard',
+    'ODIN #004 — The Gaze',
+    'NJORD #005 — Dawn at the Edge',
+    'PROP FIRM PNL CALCULATOR'
+  ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.gig-card[data-sol]');
+    cards.forEach((card, i) => {
+      const btn = card.querySelector('.nft-buy-btn');
+      if (!btn) return;
+      const sol = parseFloat(card.dataset.sol);
+      if (i === 5) {
+        btn.addEventListener('click', () => buyDigital(sol, nftNames[i]));
+      } else {
+        btn.addEventListener('click', () => buyNFT(i, sol, nftNames[i]));
+      }
+    });
+  });
+
+  // ==========================================
+  // BUY DIGITAL GOOD — pay then download
+  // ==========================================
+  async function buyDigital(solAmount, productName) {
+    if (!connectedWallet) {
+      showModal('CONNECT WALLET FIRST', 'Click <strong>CONNECT WALLET</strong> at the top.', 'info');
+      return;
+    }
+    // Track click
+    track('click', { nftName: productName, nftIndex: 5, wallet: connectedWallet, action: 'buy_click' });
+    showModal('CONFIRM PURCHASE',
+      `Product: <strong>${productName}</strong><br>Price: <strong>${solAmount} SOL</strong><br>Network: <strong>Solana Devnet</strong><br><br>Approve payment in Phantom — download starts instantly after.`,
+      'loading');
+    try {
+      const provider = window._solanaProvider || window.phantom?.solana || window.solana;
+
+      const bhRes = await fetch('https://api.devnet.solana.com', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getLatestBlockhash',params:[{commitment:'confirmed'}]})
+      });
+      const { blockhash, lastValidBlockHeight } = (await bhRes.json()).result.value;
+
+      const lamports = Math.round(solAmount * 1_000_000_000);
+      const from = b58decode(connectedWallet);
+      const to   = b58decode(RECIPIENT);
+      const bh   = b58decode(blockhash);
+      const sys  = b58decode('11111111111111111111111111111111');
+
+      const idata = new Uint8Array(12);
+      const dv = new DataView(idata.buffer);
+      dv.setUint32(0, 2, true);
+      dv.setUint32(4, lamports & 0xFFFFFFFF, true);
+      dv.setUint32(8, Math.floor(lamports / 0x100000000), true);
+
+      const msg = new Uint8Array([
+        1, 0, 1, 3,
+        ...from, ...to, ...sys, ...bh,
+        1, 2, 2, 0, 1, 12, ...idata
+      ]);
+      const tx = new Uint8Array([1, ...new Uint8Array(64), ...msg]);
+      const txB58 = b58encode(tx);
+
+      const { signature } = await provider.request({
+        method: 'signAndSendTransaction',
+        params: { message: txB58 }
+      });
+
+      // Trigger download
+      const link = document.createElement('a');
+      link.href = 'pnl-calculator.xlsx';
+      link.download = 'KRCWAVES-PnL-Calculator.xlsx';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Track confirmed digital sale
+      const solPrice2 = parseFloat(document.getElementById('sol-usd')?.textContent?.replace('$','')) || 0;
+      track('transaction', {
+        nftName: productName, nftIndex: 5, solAmount, usdAmount: solAmount * solPrice2,
+        signature, wallet: connectedWallet, network: 'devnet', type: 'digital'
+      });
+
+      showModal('PAYMENT CONFIRMED! 📥',
+        `<strong>${productName}</strong> — download started!<br><br>
+         If the download didn't start, <a href="pnl-calculator.xlsx" download="KRCWAVES-PnL-Calculator.xlsx" style="color:var(--crimson);font-weight:700;">click here to download ↗</a><br><br>
+         Sig: <span style="font-size:9px;word-break:break-all;color:#444;">${signature}</span><br><br>
+         <a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:var(--crimson);font-weight:700;">VIEW ON SOLANA EXPLORER ↗</a>`,
+        'success');
+
+      const cards = document.querySelectorAll('.gig-card');
+      if (cards[5]) {
+        const btn = cards[5].querySelector('.nft-buy-btn');
+        if (btn) { btn.textContent = 'PURCHASED ✓'; btn.style.background='#2ecc71'; btn.style.borderColor='#2ecc71'; btn.style.color='#000'; }
+      }
+    } catch (err) {
+      console.error('Digital buy error:', err);
+      const msg = err.message || JSON.stringify(err);
+      if (msg.includes('rejected') || err.code === 4001 || msg.includes('User rejected')) {
+        showModal('TRANSACTION REJECTED', 'You cancelled the transaction in Phantom.', 'error');
+      } else {
+        showModal('TRANSACTION FAILED', msg, 'error');
+      }
+    }
+  }
+
+  // ==========================================
+  // FILTER + SORT
+  // ==========================================
+  function setFilter(btn, category) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('.gig-card');
+    cards.forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Sort toggle
+  const sorts = ['NEWEST ▼', 'PRICE: LOW ▲', 'PRICE: HIGH ▼', 'TOP RATED ★'];
+  let sortIdx = 0;
+  function toggleSort() {
+    sortIdx = (sortIdx + 1) % sorts.length;
+    document.getElementById('sort-btn').textContent = sorts[sortIdx];
+  }
+
+  // Track page view
+  track('click', { nftName: 'SITE', action: 'page_view', wallet: null });
+
+  // Duplicate ticker for seamless loop
+  const ticker = document.getElementById('ticker');
+  if (ticker) ticker.innerHTML += ticker.innerHTML;
+
+  // Smooth scroll
+  document.querySelectorAll('a[href="#marketplace"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById('marketplace').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>

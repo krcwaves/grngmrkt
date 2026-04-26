@@ -1,0 +1,15 @@
+const mongoose = require('mongoose');
+
+const TransactionSchema = new mongoose.Schema({
+  nftName:    { type: String, required: true },
+  nftIndex:   { type: Number },
+  solAmount:  { type: Number, required: true },
+  usdAmount:  { type: Number },
+  signature:  { type: String, required: true, unique: true },
+  wallet:     { type: String, required: true },
+  network:    { type: String, default: 'devnet' },
+  type:       { type: String, enum: ['nft', 'digital'], default: 'nft' },
+  timestamp:  { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('Transaction', TransactionSchema);

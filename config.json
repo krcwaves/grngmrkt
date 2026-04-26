@@ -1,0 +1,1 @@
+{"tokenStandard":"nft","number":5,"symbol":"KRCW","sellerFeeBasisPoints":500,"isMutable":true,"isSequential":false,"ruleSet":null,"creators":[{"address":"FLMCAqRFSTyDmMRcxTcCS1eUTDvs3oqpGSbo2w3scE1x","share":100}],"uploadMethod":"bundlr","rpcUrl":"https://api.devnet.solana.com","solTreasuryAccount":"FLMCAqRFSTyDmMRcxTcCS1eUTDvs3oqpGSbo2w3scE1x"}

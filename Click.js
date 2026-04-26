@@ -1,0 +1,12 @@
+const mongoose = require('mongoose');
+
+const ClickSchema = new mongoose.Schema({
+  nftName:   { type: String, required: true },
+  nftIndex:  { type: Number },
+  wallet:    { type: String },
+  action:    { type: String, enum: ['buy_click', 'page_view', 'wallet_connect'], default: 'buy_click' },
+  timestamp: { type: Date, default: Date.now },
+  userAgent: { type: String },
+});
+
+module.exports = mongoose.model('Click', ClickSchema);

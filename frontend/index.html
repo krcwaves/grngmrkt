@@ -216,19 +216,18 @@
   ======================== */
   .hero {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     min-height: 540px;
     border-bottom: var(--border);
-    background: var(--paper);
   }
 
   .hero-left {
-    padding: 72px 80px;
+    padding: 48px 40px;
+    border-right: var(--border);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background: var(--paper);
-    max-width: 900px;
   }
 
   .hero-headline {
@@ -511,8 +510,7 @@
     border: 2px solid var(--black);
     box-shadow: var(--shadow);
     background: var(--paper);
-    clip-path: none;
-    border-radius: 0;
+    clip-path: polygon(0% 1%, 3% 0%, 7% 1.2%, 12% 0.3%, 18% 1%, 24% 0%, 30% 0.8%, 36% 0%, 42% 1%, 50% 0.2%, 58% 1%, 65% 0%, 72% 0.8%, 79% 0.2%, 86% 1%, 92% 0%, 97% 0.8%, 100% 1%, 100% 99%, 97% 100%, 92% 98.8%, 86% 100%, 79% 99.2%, 72% 100%, 65% 98.8%, 58% 100%, 50% 99.2%, 42% 100%, 36% 98.8%, 30% 100%, 24% 99.2%, 18% 100%, 12% 98.8%, 7% 100%, 3% 99.2%, 0% 100%);
     transition: transform 0.1s, box-shadow 0.1s;
     overflow: visible;
     cursor: pointer;
@@ -1147,12 +1145,12 @@
   <div class="ticker-inner" id="ticker">
     <span class="ticker-text">
       ★ SYSTEM ONLINE <span class="ticker-sep">//</span>
-      KRCWAVES — NORSE GODS COLLECTION <span class="ticker-sep">//</span>
+      KRCWAVES COLLECTION — 6 NFTS LIVE <span class="ticker-sep">//</span>
       ◆ SOLANA PAYMENTS ENABLED <span class="ticker-sep">//</span>
-      NJORD #001 — GENESIS 1 OF 1 <span class="ticker-sep">//</span>
+      GENESIS #001 — 1 OF 1 <span class="ticker-sep">//</span>
       FLOOR: 0.02 SOL <span class="ticker-sep">//</span>
       ◉ MAINNET READY <span class="ticker-sep">//</span>
-      5 NFTS + 1 DIGITAL GOOD <span class="ticker-sep">//</span>
+      INSTANT ON-CHAIN TRANSFER <span class="ticker-sep">//</span>
       CREATOR: @KRCWAVES <span class="ticker-sep">//</span>
     </span>
   </div>
@@ -1178,15 +1176,15 @@
 <div style="margin-top:96px;">
   <div class="wallet-bar">
     <div class="wallet-status">
-      <span class="wallet-dot" id="wallet-dot"></span>
-      <span id="wallet-status-text">WALLET: NOT CONNECTED</span>
+      <span class="wallet-dot"></span>
+      <span>WALLET: NOT CONNECTED</span>
     </div>
     <div class="sol-price">
       <div class="sol-logo"></div>
       <span>SOL / USD: <span id="sol-usd">...</span></span>
       <span id="sol-change" style="color:var(--gold);">LOADING</span>
     </div>
-    <button class="wallet-connect-btn" id="wallet-btn" onclick="toggleWallet()">CONNECT WALLET</button>
+    <button class="wallet-connect-btn" onclick="this.textContent='CONNECTING...'; setTimeout(()=>this.textContent='CONNECT WALLET',2000)">CONNECT WALLET</button>
   </div>
 </div>
 
@@ -1217,7 +1215,26 @@
     </div>
   </div>
 
-  </section>
+  <div class="hero-right">
+    <div class="hero-right-img">
+      <div class="hero-img-inner">GRG</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">6</span>
+        <span class="hero-stat-label">NFT DROPS</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">1-OF-1</span>
+        <span class="hero-stat-label">GENESIS</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">SOL</span>
+        <span class="hero-stat-label">PAYMENTS</span>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- FILTER BAR -->
 <div class="filter-bar" id="marketplace">
@@ -1235,18 +1252,18 @@
 <section class="marketplace">
   <div class="section-header">
     <span class="section-title">NFT DROPS</span>
-    <span class="section-count">// 5 NFTS + 1 DIGITAL GOOD — NORSE GODS COLLECTION</span>
+    <span class="section-count">// 6 ITEMS — KRCWAVES COLLECTION</span>
   </div>
 
   <!-- Collection stats bar -->
   <div class="collection-stats">
     <div class="col-stat">
       <span class="col-stat-label">COLLECTION</span>
-      <span class="col-stat-val">NORSE GODS</span>
+      <span class="col-stat-val">KRCWAVES</span>
     </div>
     <div class="col-stat">
       <span class="col-stat-label">ITEMS</span>
-      <span class="col-stat-val">5 + 1</span>
+      <span class="col-stat-val">6</span>
     </div>
     <div class="col-stat">
       <span class="col-stat-label">FLOOR PRICE</span>
@@ -1272,7 +1289,7 @@
       <!-- NFT #001 -->
       <div class="gig-card" data-category="legendary" data-sol="0.05">
         <div class="gig-img">
-          <img src="nft1.png" alt="NJORD #001 — WATCHER OF SHORES">
+          <div class="gig-img-placeholder">◈ 001</div>
           <div class="gig-img-overlay"></div>
           <div class="nft-edition-badge">1 / 1</div>
           <div class="nft-rarity-bar">
@@ -1281,16 +1298,16 @@
           </div>
         </div>
         <div class="gig-body">
-          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="nft-collection">KRCWAVES COLLECTION</div>
           <div class="gig-tags">
-            <span class="gig-tag featured">GENESIS</span>
+            <span class="gig-tag featured">FEATURED</span>
             <span class="gig-tag">1-OF-1</span>
           </div>
-          <p class="gig-title">NJORD #001 — WATCHER OF SHORES</p>
+          <p class="gig-title">KRCWAVES #001 — GENESIS</p>
           <div class="nft-traits">
-            <div class="nft-trait">GOD: <span>NJORD</span></div>
-            <div class="nft-trait">REALM: <span>NÓATÚN</span></div>
-            <div class="nft-trait">STYLE: <span>OIL PAINT</span></div>
+            <div class="nft-trait">BG: <span>VOID</span></div>
+            <div class="nft-trait">TYPE: <span>GENESIS</span></div>
+            <div class="nft-trait">AURA: <span>CRIMSON</span></div>
           </div>
         </div>
         <div class="gig-footer">
@@ -1302,32 +1319,32 @@
       </div>
 
       <!-- NFT #002 -->
-      <div class="gig-card" data-category="legendary" data-sol="0.05">
-        <div class="gig-img">
-          <img src="nft2.png" alt="ODIN #002 — THE ALL-FATHER">
+      <div class="gig-card" data-category="rare" data-sol="0.03">
+        <div class="gig-img" style="background:#1a1a2e;">
+          <div class="gig-img-placeholder" style="color:#333;">◈ 002</div>
           <div class="gig-img-overlay"></div>
-          <div class="nft-edition-badge">1 / 1</div>
+          <div class="nft-edition-badge">2 / 10</div>
           <div class="nft-rarity-bar">
             <span class="nft-rarity-label">RARITY</span>
-            <span class="nft-rarity-pill rarity-legendary">LEGENDARY</span>
+            <span class="nft-rarity-pill rarity-rare">RARE</span>
           </div>
         </div>
         <div class="gig-body">
-          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="nft-collection">KRCWAVES COLLECTION</div>
           <div class="gig-tags">
-            <span class="gig-tag featured">GENESIS</span>
-            <span class="gig-tag">1-OF-1</span>
+            <span class="gig-tag hot">HOT</span>
+            <span class="gig-tag">SERIES A</span>
           </div>
-          <p class="gig-title">ODIN #002 — THE ALL-FATHER</p>
+          <p class="gig-title">KRCWAVES #002 — MIDNIGHT SIGNAL</p>
           <div class="nft-traits">
-            <div class="nft-trait">GOD: <span>ODIN</span></div>
-            <div class="nft-trait">REALM: <span>ASGARD</span></div>
-            <div class="nft-trait">STYLE: <span>DARK MYTH</span></div>
+            <div class="nft-trait">BG: <span>DEEP BLUE</span></div>
+            <div class="nft-trait">TYPE: <span>SIGNAL</span></div>
+            <div class="nft-trait">FX: <span>GLITCH</span></div>
           </div>
         </div>
         <div class="gig-footer">
           <div>
-            <div class="gig-price nft-card-price" data-sol="0.05">0.05 SOL<span class="nft-usd">≈ $—</span></div>
+            <div class="gig-price nft-card-price" data-sol="0.03">0.03 SOL<span class="nft-usd">≈ $—</span></div>
           </div>
           <button class="nft-buy-btn">BUY NOW</button>
         </div>
@@ -1335,8 +1352,8 @@
 
       <!-- NFT #003 -->
       <div class="gig-card" data-category="rare" data-sol="0.03">
-        <div class="gig-img">
-          <img src="nft3.png" alt="NJORD #003 — STORM OF ASGARD">
+        <div class="gig-img" style="background:#2a1a1a;">
+          <div class="gig-img-placeholder" style="color:#3a2a2a;">◈ 003</div>
           <div class="gig-img-overlay"></div>
           <div class="nft-edition-badge">1 / 5</div>
           <div class="nft-rarity-bar">
@@ -1345,16 +1362,16 @@
           </div>
         </div>
         <div class="gig-body">
-          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="nft-collection">KRCWAVES COLLECTION</div>
           <div class="gig-tags">
-            <span class="gig-tag hot">HOT</span>
+            <span class="gig-tag featured">FEATURED</span>
             <span class="gig-tag">SERIES A</span>
           </div>
-          <p class="gig-title">NJORD #003 — STORM OF ASGARD</p>
+          <p class="gig-title">KRCWAVES #003 — CRIMSON NOISE</p>
           <div class="nft-traits">
-            <div class="nft-trait">SCENE: <span>OPEN SEA</span></div>
-            <div class="nft-trait">WEATHER: <span>TEMPEST</span></div>
-            <div class="nft-trait">STYLE: <span>EPIC ART</span></div>
+            <div class="nft-trait">BG: <span>BLOOD</span></div>
+            <div class="nft-trait">TYPE: <span>NOISE</span></div>
+            <div class="nft-trait">FX: <span>STATIC</span></div>
           </div>
         </div>
         <div class="gig-footer">
@@ -1366,32 +1383,31 @@
       </div>
 
       <!-- NFT #004 -->
-      <div class="gig-card" data-category="rare" data-sol="0.03">
-        <div class="gig-img">
-          <img src="nft4.png" alt="ODIN #004 — THE GAZE">
+      <div class="gig-card" data-category="uncommon" data-sol="0.02">
+        <div class="gig-img" style="background:#1a2a1a;">
+          <div class="gig-img-placeholder" style="color:#2a3a2a;">◈ 004</div>
           <div class="gig-img-overlay"></div>
-          <div class="nft-edition-badge">2 / 5</div>
+          <div class="nft-edition-badge">4 / 20</div>
           <div class="nft-rarity-bar">
             <span class="nft-rarity-label">RARITY</span>
-            <span class="nft-rarity-pill rarity-rare">RARE</span>
+            <span class="nft-rarity-pill rarity-uncommon">UNCOMMON</span>
           </div>
         </div>
         <div class="gig-body">
-          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="nft-collection">KRCWAVES COLLECTION</div>
           <div class="gig-tags">
-            <span class="gig-tag featured">FEATURED</span>
-            <span class="gig-tag">SERIES A</span>
+            <span class="gig-tag">SERIES B</span>
           </div>
-          <p class="gig-title">ODIN #004 — THE GAZE</p>
+          <p class="gig-title">KRCWAVES #004 — JADE FREQUENCY</p>
           <div class="nft-traits">
-            <div class="nft-trait">GOD: <span>ODIN</span></div>
-            <div class="nft-trait">FOCUS: <span>EYES</span></div>
-            <div class="nft-trait">STYLE: <span>SKETCH</span></div>
+            <div class="nft-trait">BG: <span>FOREST</span></div>
+            <div class="nft-trait">TYPE: <span>FREQ</span></div>
+            <div class="nft-trait">FX: <span>WAVE</span></div>
           </div>
         </div>
         <div class="gig-footer">
           <div>
-            <div class="gig-price nft-card-price" data-sol="0.03">0.03 SOL<span class="nft-usd">≈ $—</span></div>
+            <div class="gig-price nft-card-price" data-sol="0.02">0.02 SOL<span class="nft-usd">≈ $—</span></div>
           </div>
           <button class="nft-buy-btn">BUY NOW</button>
         </div>
@@ -1399,25 +1415,25 @@
 
       <!-- NFT #005 -->
       <div class="gig-card" data-category="uncommon" data-sol="0.02">
-        <div class="gig-img">
-          <img src="nft5.png" alt="NJORD #005 — DAWN AT THE EDGE">
+        <div class="gig-img" style="background:#2a2a1a;">
+          <div class="gig-img-placeholder" style="color:#3a3a2a;">◈ 005</div>
           <div class="gig-img-overlay"></div>
-          <div class="nft-edition-badge">3 / 10</div>
+          <div class="nft-edition-badge">7 / 20</div>
           <div class="nft-rarity-bar">
             <span class="nft-rarity-label">RARITY</span>
             <span class="nft-rarity-pill rarity-uncommon">UNCOMMON</span>
           </div>
         </div>
         <div class="gig-body">
-          <div class="nft-collection">KRCWAVES — NORSE GODS</div>
+          <div class="nft-collection">KRCWAVES COLLECTION</div>
           <div class="gig-tags">
             <span class="gig-tag">SERIES B</span>
           </div>
-          <p class="gig-title">NJORD #005 — DAWN AT THE EDGE</p>
+          <p class="gig-title">KRCWAVES #005 — GOLD STATIC</p>
           <div class="nft-traits">
-            <div class="nft-trait">SCENE: <span>COASTLINE</span></div>
-            <div class="nft-trait">SKY: <span>ROSE DAWN</span></div>
-            <div class="nft-trait">STYLE: <span>OIL PAINT</span></div>
+            <div class="nft-trait">BG: <span>AMBER</span></div>
+            <div class="nft-trait">TYPE: <span>STATIC</span></div>
+            <div class="nft-trait">FX: <span>GRAIN</span></div>
           </div>
         </div>
         <div class="gig-footer">
@@ -1565,353 +1581,8 @@
   </div>
 </footer>
 
-<!-- No web3.js needed — using pure fetch + Phantom native -->
 <script>
-  const RECIPIENT = 'FLMCAqRFSTyDmMRcxTcCS1eUTDvs3oqpGSbo2w3scE1x';
-  let connectedWallet = null;
-
-  // ==========================================
-  // TRACKING — sends data to Node.js backend
-  // ==========================================
-  const BACKEND = 'http://localhost:3001';
-
-  async function track(type, data) {
-    try {
-      await fetch(`${BACKEND}/api/track/${type}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, userAgent: navigator.userAgent })
-      });
-    } catch (e) { /* backend offline — silently fail */ }
-  }
-
-  // ==========================================
-  // BASE58 encoder (needed for Phantom)
-  // ==========================================
-  function b58encode(bytes) {
-    const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    let n = BigInt(0);
-    for (const b of bytes) n = (n << 8n) | BigInt(b);
-    let result = '';
-    while (n > 0n) {
-      const rem = Number(n % 58n);
-      n = n / 58n;
-      result = ALPHABET[rem] + result;
-    }
-    for (const b of bytes) {
-      if (b !== 0) break;
-      result = '1' + result;
-    }
-    return result;
-  }
-
-  // ==========================================
-  // MODAL
-  // ==========================================
-  function showModal(title, message, type = 'info') {
-    let modal = document.getElementById('tx-modal');
-    if (!modal) { modal = document.createElement('div'); modal.id = 'tx-modal'; document.body.appendChild(modal); }
-    modal.style.cssText = 'position:fixed;inset:0;background:rgba(26,26,26,0.92);display:flex;align-items:center;justify-content:center;z-index:99999;font-family:JetBrains Mono,monospace;';
-    const colors = { info:'var(--gold)', success:'#2ecc71', error:'var(--crimson)', loading:'var(--gold)' };
-    const icons  = { info:'◈', success:'✓', error:'✗', loading:'▪▪▪' };
-    modal.innerHTML = `<div style="background:var(--paper);border:4px solid var(--black);box-shadow:8px 8px 0px ${colors[type]};padding:32px 40px;max-width:480px;width:90%;">
-      <div style="font-family:'Cabinet Grotesk',sans-serif;font-size:32px;font-weight:900;color:${colors[type]};margin-bottom:8px;">${icons[type]}</div>
-      <div style="font-family:'Cabinet Grotesk',sans-serif;font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;color:var(--black);margin-bottom:12px;">${title}</div>
-      <div style="font-size:11px;line-height:1.8;color:#444;">${message}</div>
-      ${type !== 'loading' ? `<button onclick="document.getElementById('tx-modal').remove()" style="margin-top:20px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;background:var(--black);color:var(--paper);border:none;padding:10px 20px;cursor:pointer;letter-spacing:0.1em;">CLOSE ✗</button>` : ''}
-    </div>`;
-  }
-
-  // ==========================================
-  // WALLET
-  // ==========================================
-  async function toggleWallet() {
-    if (connectedWallet) { disconnectWallet(); return; }
-    await connectWallet();
-  }
-
-  async function connectWallet() {
-    const btn = document.getElementById('wallet-btn');
-
-    // Debug what's available
-    console.log('window.solana:', window.solana);
-    console.log('window.phantom:', window.phantom);
-
-    const provider = window.phantom?.solana || window.solana;
-
-    if (!provider || !provider.isPhantom) {
-      showModal('PHANTOM NOT FOUND',
-        'Phantom wallet was not detected.<br><br>' +
-        '1. Make sure Phantom extension is installed and enabled<br>' +
-        '2. If using Brave, click the lion shield icon and disable shields for this page<br>' +
-        '3. Try refreshing after enabling<br>' +
-        '4. Or open in Chrome instead<br><br>' +
-        'Install at: <a href="https://phantom.app" target="_blank" style="color:var(--crimson);">phantom.app</a>',
-        'error');
-      return;
-    }
-    try {
-      btn.textContent = 'CONNECTING...';
-      const resp = await provider.connect();
-      connectedWallet = resp.publicKey.toString();
-      document.getElementById('wallet-dot').classList.add('connected');
-      btn.textContent = 'DISCONNECT';
-      btn.style.cssText += 'color:var(--gold);border-color:var(--gold);';
-      const balance = await getBalance(connectedWallet);
-      document.getElementById('wallet-status-text').textContent = connectedWallet.slice(0,4) + '...' + connectedWallet.slice(-4) + ' · ' + balance + ' SOL';
-      showModal('WALLET CONNECTED', `Address: <strong>${connectedWallet.slice(0,8)}...${connectedWallet.slice(-8)}</strong><br>Balance: <strong>${balance} SOL</strong> (devnet)<br><br>You can now buy NFTs from the collection below.`, 'success');
-      window._solanaProvider = provider;
-      // Track wallet connect
-      track('click', { nftName: 'SITE', action: 'wallet_connect', wallet: connectedWallet });
-    } catch (err) {
-      btn.textContent = 'CONNECT WALLET';
-      showModal('CONNECTION FAILED', err.code === 4001 ? 'You rejected the connection in Phantom.' : (err.message || 'Unknown error.'), 'error');
-    }
-  }
-
-  function disconnectWallet() {
-    if (window.solana) window.solana.disconnect();
-    connectedWallet = null;
-    document.getElementById('wallet-dot').classList.remove('connected');
-    document.getElementById('wallet-status-text').textContent = 'WALLET: NOT CONNECTED';
-    const btn = document.getElementById('wallet-btn');
-    btn.textContent = 'CONNECT WALLET';
-    btn.style.color = ''; btn.style.borderColor = '';
-  }
-
-  async function getBalance(address) {
-    try {
-      const res = await fetch('https://api.devnet.solana.com', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ jsonrpc:'2.0', id:1, method:'getBalance', params:[address,{commitment:'confirmed'}] })
-      });
-      const data = await res.json();
-      return (data.result.value / 1e9).toFixed(4);
-    } catch { return '?'; }
-  }
-
-  // ==========================================
-  // BUY NFT — uses Phantom's native sendTransaction
-  // ==========================================
-  // ==========================================
-  // BASE58 decoder
-  // ==========================================
-  function b58decode(s) {
-    const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    let n = BigInt(0);
-    for (const c of s) {
-      const idx = ALPHABET.indexOf(c);
-      if (idx < 0) throw new Error('Non-base58 char: ' + c);
-      n = n * 58n + BigInt(idx);
-    }
-    const hex = n.toString(16).padStart(64, '0');
-    const arr = new Uint8Array(32);
-    for (let i = 0; i < 32; i++) arr[i] = parseInt(hex.slice(i*2, i*2+2), 16);
-    return arr;
-  }
-
-  // ==========================================
-  // BUY NFT — pure fetch, no web3.js
-  // ==========================================
-  async function buyNFT(cardIndex, solAmount, nftName) {
-    if (!connectedWallet) {
-      showModal('CONNECT WALLET FIRST', 'Click <strong>CONNECT WALLET</strong> at the top.', 'info');
-      return;
-    }
-    // Track buy click
-    track('click', { nftName, nftIndex: cardIndex, wallet: connectedWallet, action: 'buy_click' });
-    showModal('CONFIRM PURCHASE',
-      `Buying: <strong>${nftName}</strong><br>Price: <strong>${solAmount} SOL</strong><br>Network: <strong>Solana Devnet</strong><br><br>Approve in Phantom...`,
-      'loading');
-    try {
-      const provider = window._solanaProvider || window.phantom?.solana || window.solana;
-
-      // 1. Get blockhash
-      const bhRes = await fetch('https://api.devnet.solana.com', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getLatestBlockhash',params:[{commitment:'confirmed'}]})
-      });
-      const { blockhash, lastValidBlockHeight } = (await bhRes.json()).result.value;
-
-      // 2. Build transaction message bytes manually
-      const lamports = Math.round(solAmount * 1_000_000_000);
-      const from = b58decode(connectedWallet);
-      const to   = b58decode(RECIPIENT);
-      const bh   = b58decode(blockhash);
-      const sys  = b58decode('11111111111111111111111111111111');
-
-      // Transfer data: type=2 (u32 LE) + lamports (u64 LE)
-      const idata = new Uint8Array(12);
-      const dv = new DataView(idata.buffer);
-      dv.setUint32(0, 2, true);
-      dv.setUint32(4, lamports & 0xFFFFFFFF, true);
-      dv.setUint32(8, Math.floor(lamports / 0x100000000), true);
-
-      // Message: header(3) + accounts_len(1) + 3×32 accounts + blockhash(32) + ix_count(1) + ix
-      const msg = new Uint8Array([
-        1, 0, 1,           // header: 1 signer, 0 ro-signers, 1 ro-nonsigner
-        3,                 // 3 account keys
-        ...from, ...to, ...sys,
-        ...bh,             // recent blockhash
-        1,                 // 1 instruction
-        2,                 // program id index (sys = index 2)
-        2, 0, 1,           // 2 account indices: from(0), to(1)
-        12, ...idata       // data length + data
-      ]);
-
-      // 3. Full transaction = sig_count(1) + empty_sig(64) + message
-      const tx = new Uint8Array([1, ...new Uint8Array(64), ...msg]);
-
-      // 4. Send to Phantom as base58
-      const txB58 = b58encode(tx);
-      const { signature } = await provider.request({
-        method: 'signAndSendTransaction',
-        params: { message: txB58 }
-      });
-
-      // Track confirmed transaction
-      const solPrice = parseFloat(document.getElementById('sol-usd')?.textContent?.replace('$','')) || 0;
-      track('transaction', {
-        nftName, nftIndex: cardIndex, solAmount, usdAmount: solAmount * solPrice,
-        signature, wallet: connectedWallet, network: 'devnet', type: 'nft'
-      });
-
-      showModal('TRANSACTION CONFIRMED! 🎉',
-        `<strong>${nftName}</strong> is yours!<br><br>
-         Sig: <span style="font-size:9px;word-break:break-all;color:#444;">${signature}</span><br><br>
-         <a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:var(--crimson);font-weight:700;">VIEW ON SOLANA EXPLORER ↗</a>`,
-        'success');
-
-      const cards = document.querySelectorAll('.gig-card');
-      if (cards[cardIndex]) {
-        const btn = cards[cardIndex].querySelector('.nft-buy-btn');
-        if (btn) { btn.textContent = 'SOLD ✓'; btn.style.background='#2ecc71'; btn.style.borderColor='#2ecc71'; btn.style.color='#000'; btn.disabled=true; }
-      }
-    } catch (err) {
-      console.error('Buy error:', err);
-      const msg = err.message || JSON.stringify(err);
-      if (msg.includes('rejected') || err.code === 4001 || msg.includes('User rejected')) {
-        showModal('TRANSACTION REJECTED', 'You cancelled the transaction in Phantom.', 'error');
-      } else {
-        showModal('TRANSACTION FAILED', msg, 'error');
-      }
-    }
-  }
-
-  // ==========================================
-  // ATTACH BUY BUTTONS ON LOAD
-  // ==========================================
-  const nftNames = [
-    'NJORD #001 — Watcher of Shores',
-    'ODIN #002 — The All-Father',
-    'NJORD #003 — Storm of Asgard',
-    'ODIN #004 — The Gaze',
-    'NJORD #005 — Dawn at the Edge',
-    'PROP FIRM PNL CALCULATOR'
-  ];
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.gig-card[data-sol]');
-    cards.forEach((card, i) => {
-      const btn = card.querySelector('.nft-buy-btn');
-      if (!btn) return;
-      const sol = parseFloat(card.dataset.sol);
-      if (i === 5) {
-        btn.addEventListener('click', () => buyDigital(sol, nftNames[i]));
-      } else {
-        btn.addEventListener('click', () => buyNFT(i, sol, nftNames[i]));
-      }
-    });
-  });
-
-  // ==========================================
-  // BUY DIGITAL GOOD — pay then download
-  // ==========================================
-  async function buyDigital(solAmount, productName) {
-    if (!connectedWallet) {
-      showModal('CONNECT WALLET FIRST', 'Click <strong>CONNECT WALLET</strong> at the top.', 'info');
-      return;
-    }
-    // Track click
-    track('click', { nftName: productName, nftIndex: 5, wallet: connectedWallet, action: 'buy_click' });
-    showModal('CONFIRM PURCHASE',
-      `Product: <strong>${productName}</strong><br>Price: <strong>${solAmount} SOL</strong><br>Network: <strong>Solana Devnet</strong><br><br>Approve payment in Phantom — download starts instantly after.`,
-      'loading');
-    try {
-      const provider = window._solanaProvider || window.phantom?.solana || window.solana;
-
-      const bhRes = await fetch('https://api.devnet.solana.com', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getLatestBlockhash',params:[{commitment:'confirmed'}]})
-      });
-      const { blockhash, lastValidBlockHeight } = (await bhRes.json()).result.value;
-
-      const lamports = Math.round(solAmount * 1_000_000_000);
-      const from = b58decode(connectedWallet);
-      const to   = b58decode(RECIPIENT);
-      const bh   = b58decode(blockhash);
-      const sys  = b58decode('11111111111111111111111111111111');
-
-      const idata = new Uint8Array(12);
-      const dv = new DataView(idata.buffer);
-      dv.setUint32(0, 2, true);
-      dv.setUint32(4, lamports & 0xFFFFFFFF, true);
-      dv.setUint32(8, Math.floor(lamports / 0x100000000), true);
-
-      const msg = new Uint8Array([
-        1, 0, 1, 3,
-        ...from, ...to, ...sys, ...bh,
-        1, 2, 2, 0, 1, 12, ...idata
-      ]);
-      const tx = new Uint8Array([1, ...new Uint8Array(64), ...msg]);
-      const txB58 = b58encode(tx);
-
-      const { signature } = await provider.request({
-        method: 'signAndSendTransaction',
-        params: { message: txB58 }
-      });
-
-      // Trigger download
-      const link = document.createElement('a');
-      link.href = 'pnl-calculator.xlsx';
-      link.download = 'KRCWAVES-PnL-Calculator.xlsx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Track confirmed digital sale
-      const solPrice2 = parseFloat(document.getElementById('sol-usd')?.textContent?.replace('$','')) || 0;
-      track('transaction', {
-        nftName: productName, nftIndex: 5, solAmount, usdAmount: solAmount * solPrice2,
-        signature, wallet: connectedWallet, network: 'devnet', type: 'digital'
-      });
-
-      showModal('PAYMENT CONFIRMED! 📥',
-        `<strong>${productName}</strong> — download started!<br><br>
-         If the download didn't start, <a href="pnl-calculator.xlsx" download="KRCWAVES-PnL-Calculator.xlsx" style="color:var(--crimson);font-weight:700;">click here to download ↗</a><br><br>
-         Sig: <span style="font-size:9px;word-break:break-all;color:#444;">${signature}</span><br><br>
-         <a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:var(--crimson);font-weight:700;">VIEW ON SOLANA EXPLORER ↗</a>`,
-        'success');
-
-      const cards = document.querySelectorAll('.gig-card');
-      if (cards[5]) {
-        const btn = cards[5].querySelector('.nft-buy-btn');
-        if (btn) { btn.textContent = 'PURCHASED ✓'; btn.style.background='#2ecc71'; btn.style.borderColor='#2ecc71'; btn.style.color='#000'; }
-      }
-    } catch (err) {
-      console.error('Digital buy error:', err);
-      const msg = err.message || JSON.stringify(err);
-      if (msg.includes('rejected') || err.code === 4001 || msg.includes('User rejected')) {
-        showModal('TRANSACTION REJECTED', 'You cancelled the transaction in Phantom.', 'error');
-      } else {
-        showModal('TRANSACTION FAILED', msg, 'error');
-      }
-    }
-  }
-
-  // ==========================================
-  // FILTER + SORT
-  // ==========================================
+  // Filter functionality
   function setFilter(btn, category) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -1933,12 +1604,70 @@
     document.getElementById('sort-btn').textContent = sorts[sortIdx];
   }
 
-  // Track page view
-  track('click', { nftName: 'SITE', action: 'page_view', wallet: null });
-
   // Duplicate ticker for seamless loop
   const ticker = document.getElementById('ticker');
-  if (ticker) ticker.innerHTML += ticker.innerHTML;
+  const clone = ticker.innerHTML;
+  ticker.innerHTML += clone;
+
+  // Live SOL price — tries CoinGecko, falls back to Binance public API
+  async function fetchSolPrice() {
+    let price = null, change = null;
+
+    try {
+      // Primary: CoinGecko
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true');
+      const data = await res.json();
+      price = data.solana.usd;
+      change = data.solana.usd_24h_change;
+    } catch (e1) {
+      try {
+        // Fallback: Binance public ticker (no CORS issues)
+        const res2 = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT');
+        const d2 = await res2.json();
+        price = parseFloat(d2.lastPrice);
+        change = parseFloat(d2.priceChangePercent);
+      } catch (e2) {
+        price = null;
+      }
+    }
+
+    const priceEl = document.getElementById('sol-usd');
+    const changeEl = document.getElementById('sol-change');
+
+    if (price !== null) {
+      const priceStr = '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const changeStr = change !== null ? ((change >= 0 ? '↑ +' : '↓ ') + Math.abs(change).toFixed(2) + '%') : '';
+      const changeColor = (change !== null && change >= 0) ? 'var(--gold)' : 'var(--crimson)';
+
+      if (priceEl) priceEl.textContent = priceStr;
+      if (changeEl) { changeEl.textContent = changeStr; changeEl.style.color = changeColor; }
+
+      // Update NFT card USD values
+      document.querySelectorAll('.nft-card-price').forEach(el => {
+        const solAmt = parseFloat(el.dataset.sol);
+        const usdSpan = el.querySelector('.nft-usd');
+        if (!isNaN(solAmt) && usdSpan) {
+          usdSpan.textContent = '≈ $' + (solAmt * price).toFixed(2);
+        }
+      });
+
+      // Update floor price in collection stats (lowest sol card)
+      const prices = Array.from(document.querySelectorAll('.gig-card'))
+        .map(c => parseFloat(c.dataset.sol))
+        .filter(v => !isNaN(v));
+      if (prices.length) {
+        const floor = Math.min(...prices);
+        const fp = document.getElementById('floor-price');
+        if (fp) fp.textContent = floor + ' SOL ≈ $' + (floor * price).toFixed(2);
+      }
+    } else {
+      if (priceEl) priceEl.textContent = 'UNAVAILABLE';
+      if (changeEl) changeEl.textContent = '';
+    }
+  }
+
+  fetchSolPrice();
+  setInterval(fetchSolPrice, 60000); // refresh every 60s
 
   // Smooth scroll
   document.querySelectorAll('a[href="#marketplace"]').forEach(a => {

@@ -245,7 +245,7 @@
 
   async function loadStats() {
     try {
-      const res = await fetch('/api/stats', {
+      const res = await fetch('https://grngmrkt-backend.onrender.com/api/stats', {
         headers: { 'x-admin-password': adminPassword }
       });
       if (res.status === 401) {
@@ -261,7 +261,7 @@
       renderStats(data);
     } catch (err) {
       document.getElementById('login-error').style.display = 'block';
-      document.getElementById('login-error').textContent = '✗ SERVER ERROR — IS NODE RUNNING?';
+      document.getElementById('login-error').textContent = '✗ SERVER ERROR — CHECK RENDER LOGS';
     }
   }
 

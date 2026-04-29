@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3001;
 // ── Middleware ────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname))); // serve index.html etc.
+app.use(express.static(path.join(__dirname, 'frontend'))); // serve from frontend/
 
 // ── MongoDB connection ────────────────────────────────────
 mongoose.connect(process.env.MONGODB_URI)
@@ -109,9 +109,19 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
+// GET /about
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, 'about.html'));
+});
+
 // GET /admin  — serve admin dashboard
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.sendFile(path.join(__dirname, 'frontend', 'admin.html'));
+});
+
+// GET / — serve main site
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 // ── Start ─────────────────────────────────────────────────

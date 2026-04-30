@@ -51,6 +51,19 @@ app.post('/api/track/transaction', async (req, res) => {
   }
 });
 
+// GET /health — check server + MongoDB status
+app.get('/health', (req, res) => {
+  const mongoState = ['disconnected','connected','connecting','disconnecting'];
+  res.json({
+    server: 'ok',
+    mongodb: mongoState[mongoose.connection.readyState] || 'unknown',
+    env: {
+      hasMongoUri: !!process.env.MONGODB_URI,
+      hasAdminPw: !!process.env.ADMIN_PASSWORD
+    }
+  });
+});
+
 // GET /api/stats  — admin stats (password protected)
 app.get('/api/stats', async (req, res) => {
   const pw = req.headers['x-admin-password'];
@@ -58,8 +71,10 @@ app.get('/api/stats', async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   try {
+    console.log('📊 Stats requested, querying MongoDB...');
     const transactions = await Transaction.find().sort({ timestamp: -1 });
     const clicks       = await Click.find().sort({ timestamp: -1 });
+    console.log(`✅ Found ${transactions.length} transactions, ${clicks.length} clicks`);
 
     // Revenue totals
     const totalSol = transactions.reduce((sum, t) => sum + t.solAmount, 0);
@@ -105,6 +120,7 @@ app.get('/api/stats', async (req, res) => {
       recentClicks: clicks.slice(0, 50)
     });
   } catch (err) {
+    console.error('❌ Stats error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
